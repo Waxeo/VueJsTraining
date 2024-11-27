@@ -1,24 +1,15 @@
-# training
+# Training
 
-## Project setup
-```
-npm install
-```
+## Goal
+
+First approach of the VueJs language, using VueJs2, VueX and VueRouter (specified version for X and Router to be ok with VueJs2).
 
 ### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Illustration
 
-### Lints and fixes files
-```
-npm run lint
-```
+https://github.com/user-attachments/assets/5ed0e53c-ff54-4daf-a4ea-4be410d3b15a
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
