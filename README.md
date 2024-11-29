@@ -15,4 +15,14 @@ npm run serve
 https://github.com/user-attachments/assets/c605111f-ecdf-4cee-b8a4-a5811199dfd8
 
 
+### Améliorations possibles 
 
+[x] Check mapGetters et mapActions pour cleaner l'utilisation du store dans les composants .vue.
+[x] Tu peux avoir des soucis de réactivité en mettant index en key du v-for, il vaut mieux y mettre un id unique. Je te laisse check pourquoi.
+
+Des idées pour améliorer ta découverte:
+[x] Skills pourrait être un array d'objet { id: string, label: string, level: number, domains: ('dom1' | 'dom2' | 'dom3')[]: color: string }
+[in working] Rendre possible l'édition d'une skill (+ donc changer aussi le formulaire d'ajout d'un skill)
+[ ] Filtrer les skills par level, domains et label...
+[ ] Faire une view de ces skills display sous forme de liste atteignable via l'url /list et une autre display sous forme de cards atteignable via l'url /cards (en gros pour utiliser la data de ton store dans deux view différente, checker vuex-persisted-state)
+[ ] Bulk la suppression

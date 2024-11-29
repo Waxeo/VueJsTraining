@@ -10,13 +10,9 @@
 </template>
 
 <script>
-// import TrainingComponent from './components/TrainingComponent.vue'
-
 export default {
   name: 'app',
-  components: {
-    // TrainingComponent
-  }
+  components: {}
 }
 </script>
 
