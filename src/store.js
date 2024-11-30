@@ -4,14 +4,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 Vue.use(Vuex);
 
-// Qu'est ce que je veux en faire ? 
-    // Level : niveua de compétences dans le skill désigné
-    // Domains : dom1 = front, dom2 = back, dom3 = softskill
-    // Couleurs : Jaune (FFD700) pour le front, Bleu (1E90FF) pour le back, Violet (8A2BE2) pour les softskills
-    // DONC -- formulaire d'ajout d'un skills nécéssitant un mini qcm avec a cocher -- le niveau de compétences, a cocher le domaine de skill, le nom en input et on est pas mal.
-
-    // ça implique de changer le simple input du trainingcomponent, changer la logique d'ajout / suppression / affichage des skills et surement d'autres points a définir 
-
 export default new Vuex.Store({
   state: {
     skills: [
@@ -37,25 +29,30 @@ export default new Vuex.Store({
         color: "#ab5cc5a4",
       },
     ],
+    selectedSkill: null,
   },
   getters: {
-    // Récupérer le nombre total de skills
     skillCount: state => state.skills.length,
-    // Récupérer tous les skills
     allSkills: state => state.skills,
+    skillsByDomain: state => {
+      return {
+        dom1: state.skills.filter(skill => skill.domains.includes("dom1")),
+        dom2: state.skills.filter(skill => skill.domains.includes("dom2")),
+        dom3: state.skills.filter(skill => skill.domains.includes("dom3")),
+      }
+    },
+    selectedSkill: state => state.selectedSkill,
   },
   mutations: {
     ADD_SKILL(state, skill) {
-      const domains = Array.isArray(skill.domains) ? skill.domains : [];
+      const domains = Array.isArray(skill.domains) ? skill.domains : []
       const color = domains.includes("dom1")
-        ? "#FFD700"
+        ? "#ffc800c5"
         : domains.includes("dom2")
-        ? "#1E90FF"
+        ? "#57ccf0a4"
         : domains.includes("dom3")
-        ? "#8A2BE2"
-        : "#CCCCCC";
-        
-      console.log(skill.label)  
+        ? "#ab5cc5a4"
+        : "#CCCCCC"
     
       state.skills.push({
         id: uuidv4(),
@@ -63,19 +60,44 @@ export default new Vuex.Store({
         level: skill.level || 1,
         domains,
         color,
-      });
+      })
     },
     REMOVE_SKILL(state, id) {
-      // Utilise un filtre pour supprimer l'élément avec l'ID correspondant
-      state.skills = state.skills.filter(skill => skill.id !== id);
+      state.skills = state.skills.filter(skill => skill.id !== id)
+    },
+    SET_SELECTED_SKILL(state, skill) {
+      state.selectedSkill = skill ? { ...skill } : null;
+    },
+    UPDATE_SKILL(state, updatedSkill) {
+      const index = state.skills.findIndex(skill => skill.id === updatedSkill.id);
+      if (index !== -1) {
+        updatedSkill.color = updatedSkill.domains.includes("dom1")
+        ? "#ffc800c5"
+        : updatedSkill.domains.includes("dom2")
+        ? "#57ccf0a4"
+        : updatedSkill.domains.includes("dom3")
+        ? "#ab5cc5a4"
+        : "#CCCCCC"
+        state.skills.splice(index, 1, updatedSkill);
+      }
+      state.selectedSkill = null;
     },
   },
   actions: {
     addSkill({ commit }, skill) {
-      commit("ADD_SKILL", skill);
+      commit("ADD_SKILL", skill)
     },
     removeSkill({ commit }, id) {
-      commit("REMOVE_SKILL", id);
+      commit("REMOVE_SKILL", id)
+    },
+    selectSkill({ commit }, skill) {
+      commit("SET_SELECTED_SKILL", skill);
+    },
+    updateSkill({ commit }, updatedSkill) {
+      commit("UPDATE_SKILL", updatedSkill);
+    },
+    cancelEdition({ commit }) {
+      commit("SET_SELECTED_SKILL", null);
     },
   },
 });
