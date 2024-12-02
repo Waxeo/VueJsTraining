@@ -21,15 +21,15 @@
           <label>Domains:</label>
           <div>
             <label>
-              <input type="checkbox" value="dom1" v-model="newSkill.domains" />
+              <input type="checkbox" value="frontend" v-model="newSkill.domains" />
               Domain 1
             </label>
             <label>
-              <input type="checkbox" value="dom2" v-model="newSkill.domains" />
+              <input type="checkbox" value="backend" v-model="newSkill.domains" />
               Domain 2
             </label>
             <label>
-              <input type="checkbox" value="dom3" v-model="newSkill.domains" />
+              <input type="checkbox" value="softskills" v-model="newSkill.domains" />
               Domain 3
             </label>
           </div>
@@ -46,7 +46,7 @@
           <ul>
             <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
               <li
-                v-for="skill in skillsByDomain.dom1"
+                v-for="skill in skillsByDomain.frontend"
                 :key="skill.id"
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
@@ -65,7 +65,7 @@
           <ul>
             <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
               <li
-                v-for="skill in skillsByDomain.dom2"
+                v-for="skill in skillsByDomain.backend"
                 :key="skill.id"
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
@@ -84,7 +84,7 @@
           <ul>
             <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
               <li
-                v-for="skill in skillsByDomain.dom3"
+                v-for="skill in skillsByDomain.softskills"
                 :key="skill.id"
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
@@ -117,21 +117,21 @@
             <label>
               <input
                 type="checkbox"
-                value="dom1"
+                value="frontend"
                 v-model="selectedSkill.domains"
               /> Domain 1
             </label>
             <label>
               <input
                 type="checkbox"
-                value="dom2"
+                value="backend"
                 v-model="selectedSkill.domains"
               /> Domain 2
             </label>
             <label>
               <input
                 type="checkbox"
-                value="dom3"
+                value="softskills"
                 v-model="selectedSkill.domains"
               /> Domain 3
             </label>
@@ -261,12 +261,12 @@ export default {
   }
 
   .skill-item {
-    display: flex; /* Utilise Flexbox pour aligner les enfants */
-    justify-content: space-between; /* Place le bouton à gauche et l'icône à droite */
-    align-items: center; /* Aligne verticalement au milieu */
-    padding: 10px; /* Ajoute un espace intérieur */
-    border-radius: 4px; /* Coins arrondis pour esthétique */
-    margin-bottom: 5px; /* Espacement entre les items */
+    display: flex; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px; 
+    border-radius: 4px;
+    margin-bottom: 5px; 
   }
 
   .skill-button {
@@ -276,7 +276,7 @@ export default {
     text-align: left;
     font-size: inherit;
     cursor: pointer;
-    flex: 1; /* Le bouton occupe tout l'espace disponible */
+    flex: 1;
   }
 
   .skill-button:hover {
@@ -286,7 +286,7 @@ export default {
 
   i {
     cursor: pointer;
-    font-size: 1.2em; /* Augmente la taille de l'icône */
+    font-size: 1.2em;
   }
 
   .edit-skill-form {

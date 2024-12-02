@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { v4 as uuidv4 } from 'uuid'
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
@@ -11,21 +12,21 @@ export default new Vuex.Store({
         id: uuidv4(),
         label: "Vue.js",
         level: 3,
-        domains: ["dom1"],
+        domains: ["frontend"],
         color: "#ffc800c5",
       },
       {
         id: uuidv4(),
         label: "Node.js",
         level: 5,
-        domains: ["dom2"],
+        domains: ["backend"],
         color: "#57ccf0a4",
       },
       {
         id: uuidv4(),
         label: "Team Work",
         level: 10,
-        domains: ["dom3"],
+        domains: ["softskills"],
         color: "#ab5cc5a4",
       },
     ],
@@ -36,9 +37,9 @@ export default new Vuex.Store({
     allSkills: state => state.skills,
     skillsByDomain: state => {
       return {
-        dom1: state.skills.filter(skill => skill.domains.includes("dom1")),
-        dom2: state.skills.filter(skill => skill.domains.includes("dom2")),
-        dom3: state.skills.filter(skill => skill.domains.includes("dom3")),
+        frontend: state.skills.filter(skill => skill.domains.includes("frontend")),
+        backend: state.skills.filter(skill => skill.domains.includes("backend")),
+        softskills: state.skills.filter(skill => skill.domains.includes("softskills")),
       }
     },
     selectedSkill: state => state.selectedSkill,
@@ -46,11 +47,11 @@ export default new Vuex.Store({
   mutations: {
     ADD_SKILL(state, skill) {
       const domains = Array.isArray(skill.domains) ? skill.domains : []
-      const color = domains.includes("dom1")
+      const color = domains.includes("frontend")
         ? "#ffc800c5"
-        : domains.includes("dom2")
+        : domains.includes("backend")
         ? "#57ccf0a4"
-        : domains.includes("dom3")
+        : domains.includes("softskills")
         ? "#ab5cc5a4"
         : "#CCCCCC"
     
@@ -71,11 +72,11 @@ export default new Vuex.Store({
     UPDATE_SKILL(state, updatedSkill) {
       const index = state.skills.findIndex(skill => skill.id === updatedSkill.id);
       if (index !== -1) {
-        updatedSkill.color = updatedSkill.domains.includes("dom1")
+        updatedSkill.color = updatedSkill.domains.includes("frontend")
         ? "#ffc800c5"
-        : updatedSkill.domains.includes("dom2")
+        : updatedSkill.domains.includes("backend")
         ? "#57ccf0a4"
-        : updatedSkill.domains.includes("dom3")
+        : updatedSkill.domains.includes("softskills")
         ? "#ab5cc5a4"
         : "#CCCCCC"
         state.skills.splice(index, 1, updatedSkill);
@@ -100,6 +101,11 @@ export default new Vuex.Store({
       commit("SET_SELECTED_SKILL", null);
     },
   },
+  plugins: [
+    createPersistedState({
+      storage: window.localStorage, // sauvegarde dans localStorage pour permettre la persistance des données.
+    }),
+  ],
 });
 
 
