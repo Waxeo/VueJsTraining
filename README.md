@@ -42,7 +42,7 @@ https://github.com/user-attachments/assets/926af649-74d8-40c9-b725-1aec0ca306eb
 
 - [ ] Les sections FrontEnd - BackEnd et Softskills le code se répète -> en faire un composant -->
 
-- [good -- à embellir] Comment je filtre par level ? => rendre les filtres dynamique via des select, en tant qu’utilisateur mon souhait est de pouvoir afficher une liste des Sofskills de level 2 comme une liste des Backend de niveau 3 par exemple
+- [ ] Comment je filtre par level ? => rendre les filtres dynamique via des select, en tant qu’utilisateur mon souhait est de pouvoir afficher une liste des Sofskills de level 2 comme une liste des Backend de niveau 3 par exemple
 
 - [ ] Dans le store le computeColor est dupliqué deux fois ; fais en une fonction. => Ici ton array domains ne peut avoir qu’une valeur en [0] donc le plus simple est de faire
 const mapSkillColor = { sofskill: blue, backend: red, frontend: yellow };
@@ -63,3 +63,5 @@ const color = mapSkillColor[domains[0]]
 // 5. S'assurer du bon fonctionnement du conseil 3
 
 // 6. Completer le dernier conseil de la liste.
+
+// 7. Faire un coup de clean côté UX/UI
