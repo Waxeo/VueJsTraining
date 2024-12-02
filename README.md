@@ -10,12 +10,18 @@ First approach of the VueJs language, using VueJs2, VueX and VueRouter (specifie
 npm run serve
 ```
 
-### Illustration
+### Illustration V1 (Avant premier feedback)
 
 https://github.com/user-attachments/assets/c605111f-ecdf-4cee-b8a4-a5811199dfd8
 
+### Illustration V2 (Après premier feedback)
 
-### Améliorations possibles
+
+https://github.com/user-attachments/assets/926af649-74d8-40c9-b725-1aec0ca306eb
+
+
+
+### Améliorations possibles pour V2
 
 - [x] Check mapGetters et mapActions pour cleaner l'utilisation du store dans les composants .vue.
 - [x] Tu peux avoir des soucis de réactivité en mettant index en key du v-for, il vaut mieux y mettre un id unique. Je te laisse check pourquoi.
