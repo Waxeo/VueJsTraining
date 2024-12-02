@@ -20,7 +20,7 @@
       </div>
 
 
-      <form @submit.prevent="addSkill(newSkill)">
+      <!-- <form @submit.prevent="addSkill(newSkill)">
         <div>
           <label for="skill-name">Skill Name:</label>
           <input id="skill-name" type="text" v-model="newSkill.label" placeholder="Enter a skill name" required />
@@ -55,7 +55,7 @@
         </div>
 
         <button type="submit">Add Skill</button>
-      </form>
+      </form> -->
 
       <p>Total skills: {{ skillCount }}</p>
 
@@ -73,9 +73,12 @@
                   :style="{ backgroundColor: skill.color }"
                   class="skill-item"
                 >
-                  <button @click="selectSkill(skill)" class="skill-button">
+                  <router-link
+                    :to="{ name: 'editSkill', params: { id: skill.id } }"
+                    class="skill-button"
+                  >
                     {{ skill.label }} | {{ skill.level }}
-                  </button>
+                  </router-link>
                   <i class="fa fa-minus-circle" @click="removeSkill(skill.id)"></i>
                 </li>
               </transition-group>
@@ -93,9 +96,12 @@
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
               >
-                <button @click="selectSkill(skill)" class="skill-button">
+                <router-link
+                  :to="{ name: 'editSkill', params: { id: skill.id } }"
+                  class="skill-button"
+                >
                   {{ skill.label }} | {{ skill.level }}
-                </button>
+                </router-link>
                 <i class="fa fa-minus-circle" @click="removeSkill(skill.id)"></i>
               </li>
             </transition-group>
@@ -105,7 +111,7 @@
 
       <p>These are the skills that you possess</p>
 
-      <div v-if="selectedSkill" class="edit-skill-form">
+      <!-- <div v-if="selectedSkill" class="edit-skill-form">
         <h3>Edit Skill</h3>
         <form @submit.prevent="updateSkill(selectedSkill)">
           <div>
@@ -147,7 +153,7 @@
             <button type="button" @click="cancelEdition">Cancel</button>
           </div>
         </form>
-      </div>
+      </div> -->
 
     </div>
   </div>

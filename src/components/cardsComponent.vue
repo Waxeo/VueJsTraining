@@ -11,6 +11,12 @@
           <h3>{{ skill.label }}</h3>
           <p>Level: {{ skill.level }}</p>
           <p>Domains: {{ skill.domains.join(', ') }}</p>
+          <!-- <router-link
+            :to="{ name: 'addSkill'}"
+            class="edit-button"
+          >
+            Edit  
+          </router-link> -->
           <button class="delete-button" @click="removeSkill(skill.id)">Delete</button>
         </div>
       </div>
