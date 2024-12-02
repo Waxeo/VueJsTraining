@@ -1,6 +1,25 @@
 <template>
   <div class="parent-container">
     <div class="holder">
+
+      <!-- Filter Section -->
+      <div class="filter-container">
+        <label for="domain-filter">Filter by Domain:</label>
+        <select id="domain-filter" v-model="selectedDomain">
+          <option value="">All Domains</option>
+          <option value="frontend">Frontend</option>
+          <option value="backend">Backend</option>
+          <option value="softskills">Softskills</option>
+        </select>
+
+        <label for="level-filter">Filter by Level:</label>
+        <select id="level-filter" v-model.number="selectedLevel">
+          <option value="">All Levels</option>
+          <option v-for="num in 10" :key="num" :value="num">{{ num }}</option>
+        </select>
+      </div>
+
+
       <form @submit.prevent="addSkill(newSkill)">
         <div>
           <label for="skill-name">Skill Name:</label>
@@ -40,13 +59,36 @@
 
       <p>Total skills: {{ skillCount }}</p>
 
+      <!-- Skills List -->
       <div class="skills-container">
-        <div class="skills-list">
-          <h3>FrontEnd</h3>
+        <!-- Si tous les domaines sont sélectionnés, afficher trié par domaine -->
+        <div v-if="!selectedDomain">
+          <div v-for="(skills, domain) in groupedFilteredSkills" :key="domain" class="skills-list">
+            <h3>{{ domain }}</h3>
+            <ul>
+              <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
+                <li
+                  v-for="skill in skills"
+                  :key="skill.id"
+                  :style="{ backgroundColor: skill.color }"
+                  class="skill-item"
+                >
+                  <button @click="selectSkill(skill)" class="skill-button">
+                    {{ skill.label }} | {{ skill.level }}
+                  </button>
+                  <i class="fa fa-minus-circle" @click="removeSkill(skill.id)"></i>
+                </li>
+              </transition-group>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Si un domaine spécifique est sélectionné, afficher sans groupe -->
+        <div v-else>
           <ul>
             <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
               <li
-                v-for="skill in skillsByDomain.frontend"
+                v-for="skill in groupedFilteredSkills.all"
                 :key="skill.id"
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
@@ -59,46 +101,8 @@
             </transition-group>
           </ul>
         </div>
-
-        <div class="skills-list">
-          <h3>BackEnd</h3>
-          <ul>
-            <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
-              <li
-                v-for="skill in skillsByDomain.backend"
-                :key="skill.id"
-                :style="{ backgroundColor: skill.color }"
-                class="skill-item"
-              >
-                <button @click="selectSkill(skill)" class="skill-button">
-                  {{ skill.label }} | {{ skill.level }}
-                </button>
-                <i class="fa fa-minus-circle" @click="removeSkill(skill.id)"></i>
-              </li>
-            </transition-group>
-          </ul>
-        </div>
-
-        <div class="skills-list">
-          <h3>SoftSkills</h3>
-          <ul>
-            <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
-              <li
-                v-for="skill in skillsByDomain.softskills"
-                :key="skill.id"
-                :style="{ backgroundColor: skill.color }"
-                class="skill-item"
-              >
-                <button @click="selectSkill(skill)" class="skill-button">
-                  {{ skill.label }} | {{ skill.level }}
-                </button>
-                <i class="fa fa-minus-circle" @click="removeSkill(skill.id)"></i>
-              </li>
-            </transition-group>
-          </ul>
-        </div>
-
       </div>
+
       <p>These are the skills that you possess</p>
 
       <div v-if="selectedSkill" class="edit-skill-form">
@@ -110,7 +114,9 @@
           </div>
           <div>
             <label for="edit-level">Level:</label>
-            <input id="edit-level" type="number" v-model="selectedSkill.level" min="1" max="10" />
+            <select id="edit-level" v-model.number="selectedSkill.level">
+              <option v-for="num in 10" :key="num" :value="num">{{ num }}</option>
+            </select>
           </div>
           <div>
             <label>Domains:</label>
@@ -160,10 +166,46 @@ export default {
         level: null, 
         domains: [], 
       },
+      selectedDomain: "",
+      selectedLevel: "",
     };
   },
   computed: {
     ...mapGetters(["skillCount", "allSkills", "skillsByDomain", "selectedSkill"]),
+
+    // Compétences filtrées dynamiquement
+    filteredSkills() {
+      return this.allSkills.filter((skill) => {
+        console.log(skill.label)
+        console.log(skill.level)
+        console.log(this.selectedLevel)
+        const matchesDomain = this.selectedDomain
+          ? skill.domains.includes(this.selectedDomain)
+          : true;
+        const matchesLevel = this.selectedLevel
+          ? skill.level === this.selectedLevel
+          : true;
+        return matchesDomain && matchesLevel;
+      });
+    },
+
+    groupedFilteredSkills() {
+      if (!this.selectedDomain) {
+        return {
+          frontend: this.filteredSkills.filter((skill) =>
+            skill.domains.includes("frontend")
+          ),
+          backend: this.filteredSkills.filter((skill) =>
+            skill.domains.includes("backend")
+          ),
+          softskills: this.filteredSkills.filter((skill) =>
+            skill.domains.includes("softskills")
+          ),
+        };
+      }
+      return { all: this.filteredSkills };
+    },
+
   },
   methods: {
     ...mapActions(["addSkill", "removeSkill", "selectSkill", "updateSkill", "cancelEdition"]),
@@ -295,6 +337,32 @@ export default {
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
+  }
+
+  .filter-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .filter-container label {
+    font-weight: bold;
+  }
+
+  .filter-container select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+
+  .skills-list {
+    margin-bottom: 20px;
+  }
+
+  .skills-list h3 {
+    text-transform: capitalize;
+    margin-bottom: 10px;
   }
 
 </style>

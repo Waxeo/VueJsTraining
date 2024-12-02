@@ -81,6 +81,7 @@ export default new Vuex.Store({
         : "#CCCCCC"
         state.skills.splice(index, 1, updatedSkill);
       }
+
       state.selectedSkill = null;
     },
   },
