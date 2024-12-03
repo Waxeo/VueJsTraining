@@ -5,6 +5,16 @@ import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex);
 
+const mapSkillColor = {
+  frontend: "#ffc800c5",
+  backend: "#57ccf0a4",
+  softskills: "#ab5cc5a4",
+};
+
+const computeColor = (domains) => {
+  return mapSkillColor[domains[0]] || "#CCCCCC";
+};
+
 export default new Vuex.Store({
   state: {
     skills: [
@@ -30,30 +40,40 @@ export default new Vuex.Store({
         color: "#ab5cc5a4",
       },
     ],
-    selectedSkill: null,
   },
   getters: {
     skillCount: state => state.skills.length,
     allSkills: state => state.skills,
-    skillsByDomain: state => {
+    skillsByDomain: () => (skills) => {
       return {
-        frontend: state.skills.filter(skill => skill.domains.includes("frontend")),
-        backend: state.skills.filter(skill => skill.domains.includes("backend")),
-        softskills: state.skills.filter(skill => skill.domains.includes("softskills")),
-      }
+        frontend: skills.filter((skill) => skill.domains.includes("frontend")),
+        backend: skills.filter((skill) => skill.domains.includes("backend")),
+        softskills: skills.filter((skill) => skill.domains.includes("softskills")),
+      };
+    },    
+    filteredSkills: (state) => (selectedDomain, selectedLevel) => {
+      return state.skills.filter((skill) => {
+        const matchesDomain = selectedDomain
+          ? skill.domains.includes(selectedDomain)
+          : true
+        const matchesLevel = selectedLevel
+          ? skill.level === selectedLevel
+          : true
+        return matchesDomain && matchesLevel
+      });
     },
-    selectedSkill: state => state.selectedSkill,
+    groupedFilteredSkills: (state, getters) => (selectedDomain, selectedLevel) => {
+      const filteredSkills = getters.filteredSkills(selectedDomain, selectedLevel);
+      if (!selectedDomain) {
+        return getters.skillsByDomain(filteredSkills)
+      }
+      return { all: filteredSkills }
+    },
   },
   mutations: {
     ADD_SKILL(state, skill) {
       const domains = Array.isArray(skill.domains) ? skill.domains : []
-      const color = domains.includes("frontend")
-        ? "#ffc800c5"
-        : domains.includes("backend")
-        ? "#57ccf0a4"
-        : domains.includes("softskills")
-        ? "#ab5cc5a4"
-        : "#CCCCCC"
+      const color = computeColor(domains);
     
       state.skills.push({
         id: uuidv4(),
@@ -66,23 +86,12 @@ export default new Vuex.Store({
     REMOVE_SKILL(state, id) {
       state.skills = state.skills.filter(skill => skill.id !== id)
     },
-    SET_SELECTED_SKILL(state, skill) {
-      state.selectedSkill = skill ? { ...skill } : null;
-    },
     UPDATE_SKILL(state, updatedSkill) {
       const index = state.skills.findIndex(skill => skill.id === updatedSkill.id);
       if (index !== -1) {
-        updatedSkill.color = updatedSkill.domains.includes("frontend")
-        ? "#ffc800c5"
-        : updatedSkill.domains.includes("backend")
-        ? "#57ccf0a4"
-        : updatedSkill.domains.includes("softskills")
-        ? "#ab5cc5a4"
-        : "#CCCCCC"
+        updatedSkill.color = computeColor(updatedSkill.domains);
         state.skills.splice(index, 1, updatedSkill);
       }
-
-      state.selectedSkill = null;
     },
   },
   actions: {
@@ -91,9 +100,6 @@ export default new Vuex.Store({
     },
     removeSkill({ commit }, id) {
       commit("REMOVE_SKILL", id)
-    },
-    selectSkill({ commit }, skill) {
-      commit("SET_SELECTED_SKILL", skill);
     },
     updateSkill({ commit }, updatedSkill) {
       commit("UPDATE_SKILL", updatedSkill);

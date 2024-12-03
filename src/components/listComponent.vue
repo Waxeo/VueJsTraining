@@ -2,69 +2,16 @@
   <div class="parent-container">
     <div class="holder">
 
-      <!-- Filter Section -->
-      <div class="filter-container">
-        <label for="domain-filter">Filter by Domain:</label>
-        <select id="domain-filter" v-model="selectedDomain">
-          <option value="">All Domains</option>
-          <option value="frontend">Frontend</option>
-          <option value="backend">Backend</option>
-          <option value="softskills">Softskills</option>
-        </select>
+      <FilterControls
+        :selectedDomain="selectedDomain"
+        :selectedLevel="selectedLevel"
+        @update:selectedDomain="selectedDomain = $event"
+        @update:selectedLevel="selectedLevel = $event"
+      />
 
-        <label for="level-filter">Filter by Level:</label>
-        <select id="level-filter" v-model.number="selectedLevel">
-          <option value="">All Levels</option>
-          <option v-for="num in 10" :key="num" :value="num">{{ num }}</option>
-        </select>
-      </div>
-
-
-      <!-- <form @submit.prevent="addSkill(newSkill)">
-        <div>
-          <label for="skill-name">Skill Name:</label>
-          <input id="skill-name" type="text" v-model="newSkill.label" placeholder="Enter a skill name" required />
-        </div>
-
-        <div>
-          <label>Skill Level:</label>
-          <div>
-            <select id="rating" v-model.number="newSkill.level">
-              <option v-for="num in 10" :key="num" :value="num">{{ num }}</option>
-            </select>
-
-          </div>
-        </div>
-
-        <div>
-          <label>Domains:</label>
-          <div>
-            <label>
-              <input type="checkbox" value="frontend" v-model="newSkill.domains" />
-              Domain 1
-            </label>
-            <label>
-              <input type="checkbox" value="backend" v-model="newSkill.domains" />
-              Domain 2
-            </label>
-            <label>
-              <input type="checkbox" value="softskills" v-model="newSkill.domains" />
-              Domain 3
-            </label>
-          </div>
-        </div>
-
-        <button type="submit">Add Skill</button>
-      </form> -->
-
-      <p>Total skills: {{ skillCount }}</p>
-
-      <!-- Skills List -->
       <div class="skills-container">
-        <!-- Si tous les domaines sont sélectionnés, afficher trié par domaine -->
         <div v-if="!selectedDomain">
-          <div v-for="(skills, domain) in groupedFilteredSkills" :key="domain" class="skills-list">
-            <h3>{{ domain }}</h3>
+          <div v-for="(skills, domain) in groupedFilteredSkills(selectedDomain, selectedLevel)" :key="domain" class="skills-list">
             <ul>
               <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
                 <li
@@ -86,12 +33,12 @@
           </div>
         </div>
 
-        <!-- Si un domaine spécifique est sélectionné, afficher sans groupe -->
         <div v-else>
+          <h3>{{ selectedDomain }}</h3>
           <ul>
             <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
               <li
-                v-for="skill in groupedFilteredSkills.all"
+                v-for="skill in groupedFilteredSkills(selectedDomain, selectedLevel).all"
                 :key="skill.id"
                 :style="{ backgroundColor: skill.color }"
                 class="skill-item"
@@ -109,51 +56,7 @@
         </div>
       </div>
 
-      <p>These are the skills that you possess</p>
-
-      <!-- <div v-if="selectedSkill" class="edit-skill-form">
-        <h3>Edit Skill</h3>
-        <form @submit.prevent="updateSkill(selectedSkill)">
-          <div>
-            <label for="edit-label">Name:</label>
-            <input id="edit-label" type="text" v-model="selectedSkill.label" />
-          </div>
-          <div>
-            <label for="edit-level">Level:</label>
-            <select id="edit-level" v-model.number="selectedSkill.level">
-              <option v-for="num in 10" :key="num" :value="num">{{ num }}</option>
-            </select>
-          </div>
-          <div>
-            <label>Domains:</label>
-            <label>
-              <input
-                type="checkbox"
-                value="frontend"
-                v-model="selectedSkill.domains"
-              /> Domain 1
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="backend"
-                v-model="selectedSkill.domains"
-              /> Domain 2
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                value="softskills"
-                v-model="selectedSkill.domains"
-              /> Domain 3
-            </label>
-          </div>
-          <div>
-            <button type="submit">Save</button>
-            <button type="button" @click="cancelEdition">Cancel</button>
-          </div>
-        </form>
-      </div> -->
+      <p>These are the {{ skillCount }} skills that you possess</p>
 
     </div>
   </div>
@@ -161,68 +64,38 @@
 
 <script>
 
-import { mapActions, mapGetters } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
+  import FilterControls from "./filterComponent.vue";
 
-export default {
-  name: 'skillsComponent',
-  data() {
-    return {
-      newSkill: {
-        label: "", 
-        level: null, 
-        domains: [], 
-      },
-      selectedDomain: "",
-      selectedLevel: "",
-    };
-  },
-  computed: {
-    ...mapGetters(["skillCount", "allSkills", "skillsByDomain", "selectedSkill"]),
-
-    // Compétences filtrées dynamiquement
-    filteredSkills() {
-      return this.allSkills.filter((skill) => {
-        console.log(skill.label)
-        console.log(skill.level)
-        console.log(this.selectedLevel)
-        const matchesDomain = this.selectedDomain
-          ? skill.domains.includes(this.selectedDomain)
-          : true;
-        const matchesLevel = this.selectedLevel
-          ? skill.level === this.selectedLevel
-          : true;
-        return matchesDomain && matchesLevel;
-      });
+  export default {
+    name: 'skillsComponent',
+    components: {
+      FilterControls,
     },
-
-    groupedFilteredSkills() {
-      if (!this.selectedDomain) {
-        return {
-          frontend: this.filteredSkills.filter((skill) =>
-            skill.domains.includes("frontend")
-          ),
-          backend: this.filteredSkills.filter((skill) =>
-            skill.domains.includes("backend")
-          ),
-          softskills: this.filteredSkills.filter((skill) =>
-            skill.domains.includes("softskills")
-          ),
-        };
+    data() {
+      return {
+        newSkill: {
+          label: "", 
+          level: null, 
+          domains: [], 
+        },
+        selectedDomain: "",
+        selectedLevel: "",
       }
-      return { all: this.filteredSkills };
     },
-
-  },
-  methods: {
-    ...mapActions(["addSkill", "removeSkill", "selectSkill", "updateSkill", "cancelEdition"]),
-  },
-};
+    computed: {
+      ...mapGetters(["skillCount", "allSkills", "skillsByDomain", "filteredSkills", "groupedFilteredSkills"]),
+    },
+    methods: {
+      ...mapActions(["addSkill", "removeSkill", "selectSkill", "updateSkill", "cancelEdition"]),
+    },
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-@import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
-@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"; 
+  @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+  @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"; 
 
   .parent-container {
     display: flex;
@@ -324,6 +197,7 @@ export default {
     text-align: left;
     font-size: inherit;
     cursor: pointer;
+    text-decoration: none;
     flex: 1;
   }
 

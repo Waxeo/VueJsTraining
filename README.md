@@ -34,47 +34,49 @@ https://github.com/user-attachments/assets/926af649-74d8-40c9-b725-1aec0ca306eb
 
 ### Améliorations possibles pour V3
 
-- [x] Quand tu cliques sur `Add Skill` que ça reset les champs du formulaire
+- [x] Quand tu cliques sur `Add Skill`, que ça reset les champs du formulaire
 
 - [x] Rendre le formulaire d’ajout via l’url /skill et l’édition d’une skill en particulier via /skill/:id
 
 - [x] Quand tu cliques sur une skill de la liste que ça redirige vers /skill/:id, que cette skill soit éditable, qu’un bouton enregistrer persiste les changements et qu’un bouton cancel annule tous les changements en cours et remette la skill au dernier état sauvegardé
 
-- [ ] Les sections FrontEnd - BackEnd et Softskills le code se répète -> en faire un composant -->
+- [x] Les sections FrontEnd - BackEnd et Softskills le code se répète -> en faire un composant (Problème reglé, mais se redédouble : - la section du filtre (en faire un compo) - voir si il est possible de faire un unique composant pour l'affichage des listes et des cards en passant juste different type de css par dessus (clairement pas sur que ça marche)) 
 
 - [x] Comment je filtre par level ? => rendre les filtres dynamique via des select, en tant qu’utilisateur mon souhait est de pouvoir afficher une liste des Sofskills de level 2 comme une liste des Backend de niveau 3 par exemple
 
-- [ ] Dans le store le computeColor est dupliqué deux fois ; fais en une fonction. => Ici ton array domains ne peut avoir qu’une valeur en [0] donc le plus simple est de faire
+- [x] Dans le store le computeColor est dupliqué deux fois ; fais en une fonction. => Ici ton array domains ne peut avoir qu’une valeur en [0] donc le plus simple est de faire
 const mapSkillColor = { sofskill: blue, backend: red, frontend: yellow };
 const color = mapSkillColor[domains[0]]
 
-// => Roadmap -- 
+Roadmap -- 
 
-// 1. Ajouter dans ma view card et ma view list des boutons de sélection pour filtrer dynamiquement l'affichage : 
-// - Par Domaine de compétences 
-// - Par Niveau de compétences 
+1. Ajouter dans ma view card et ma view list des boutons de sélection pour filtrer dynamiquement l'affichage : 
+- Par Domaine de compétences 
+- Par Niveau de compétences 
 
-// 2. Modifier l'affichage de ces derniers en déplaçant la logique dans un nouveau composant qui reçoit juste l'ID de la compétence à afficher 
+2. Modifier l'affichage de ces derniers en déplaçant la logique dans un nouveau composant qui reçoit juste l'ID de la compétence à afficher 
 
-// 3. Clean le formulaire d'ajout après chaque validation de compétence
+3. Clean le formulaire d'ajout après chaque validation de compétence
 
-// 4. Séparer en 2 nouvelles view mon formulaire d'ajout et d'édition -- remplacer les boutons actuels par des redirections link du coup
+4. Séparer en 2 nouvelles view mon formulaire d'ajout et d'édition -- remplacer les boutons actuels par des redirections link du coup
 
-// 5. S'assurer du bon fonctionnement du conseil 3
+5. S'assurer du bon fonctionnement du conseil 3 
 
------- GOOD ------
+6. Completer le dernier conseil de la liste.
 
-// 6. Completer le dernier conseil de la liste.
+7. Faire un coup de clean côté UX/UI avec du css 
 
-// 7. Faire un coup de clean côté UX/UI avec du css
+8. Ajouter les idées pensées au cours de l'ajout des conseils
 
-// A rajouter => 
-// - [ ] Ajouter un bouton de redirection vers /skill pour ajouter une skill
-// - [ ] Transformer le choix de filtre dynamique en component utilisable dans /list et /cards
-// - [ ] 
-
+A rajouter => 
+- [x] Ajouter un bouton de redirection vers /skill pour ajouter une skill
+- [x] Rendre commun le component d'édition et celui d'ajout des skills 
+- [x] Transformer le choix de filtre dynamique en component utilisable dans /list et /cards
 
 ### Questions
 
 - Est ce que avec mapGetter et mapAction je dois mettre tous les getter et toutes les actions de mon store ou bien je peux me contenter de le remplir uniquement des getters et actions utiles a mon component ? 
-- 
+
+- Pour les actions spécifiques à un unique component, je dois les intégrer quand même au store ou je peux les laisser être défini dans le script du component ?
+
+- Est ce que ça vaut le coup de chercher un moyen de passer en component le v-if v-else de la list et des cards pour avoir globalement le même fonctionnement commun mais en affichage de list ou de card ? Je vois pas bien bien comment le faire mais ça doit pas être impossible mais je ne suis pas sur de si ça va pas rendre plus lourd le component commun et compliqué le code.
