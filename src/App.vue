@@ -4,6 +4,7 @@
     <nav>
       <router-link to="/list">List</router-link>
       <router-link to="/cards">Cards</router-link>
+      <router-link to="/skill">Add Skill</router-link>
     </nav>
 
     <router-view />
