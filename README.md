@@ -10,14 +10,18 @@ First approach of the VueJs language, using VueJs2, VueX and VueRouter (specifie
 npm run serve
 ```
 
+
 ### Illustration V1 (Avant premier feedback)
 
 https://github.com/user-attachments/assets/c605111f-ecdf-4cee-b8a4-a5811199dfd8
 
 ### Illustration V2 (Après premier feedback)
 
-
 https://github.com/user-attachments/assets/926af649-74d8-40c9-b725-1aec0ca306eb
+
+### Illustration V3 (Après deuxième feedback)
+
+https://github.com/user-attachments/assets/12e1817e-400a-4e44-8ac3-a514dacf89ba
 
 
 
@@ -72,6 +76,7 @@ A rajouter =>
 - [x] Ajouter un bouton de redirection vers /skill pour ajouter une skill
 - [x] Rendre commun le component d'édition et celui d'ajout des skills 
 - [x] Transformer le choix de filtre dynamique en component utilisable dans /list et /cards
+
 
 ### Questions
 
