@@ -1,35 +1,90 @@
 <template>
   <div lass="parent-container">
     <div class="holder">
-      <div class="cards-container">
-        <div
-          v-for="skill in allSkills"
-          :key="skill.id"
-          class="skill-card"
-          :style="{ backgroundColor: skill.color }"
-        >
-          <h3>{{ skill.label }}</h3>
-          <p>Level: {{ skill.level }}</p>
-          <p>Domains: {{ skill.domains.join(', ') }}</p>
-          <button class="delete-button" @click="removeSkill(skill.id)">Delete</button>
+
+      <FilterControls
+        :selectedDomain="selectedDomain"
+        :selectedLevel="selectedLevel"
+        @update:selectedDomain="selectedDomain = $event"
+        @update:selectedLevel="selectedLevel = $event"
+      />
+
+      <div class="skills-container">
+        <div v-if="!selectedDomain">
+          <div class="cards-container">
+            <template v-for="skills in groupedFilteredSkills('', selectedLevel)">
+              <div
+                v-for="skill in skills"
+                :key="skill.id"
+                class="skill-card"
+                :style="{ backgroundColor: skill.color }"
+              >
+                <h3>{{ skill.label }}</h3>
+                <p>Level: {{ skill.level }}</p>
+                <router-link
+                  :to="{ name: 'editSkill', params: { id: skill.id } }"
+                  class="edit-button"
+                >
+                  Edit
+                </router-link>
+                <button class="delete-button" @click="removeSkill(skill.id)">Delete</button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div v-else>
+          <h3>{{ selectedDomain }}</h3>
+          <div class="cards-container">
+            <div
+              v-for="skill in groupedFilteredSkills(selectedDomain, selectedLevel).all"
+              :key="skill.id"
+              class="skill-card"
+              :style="{ backgroundColor: skill.color }"
+            >
+              <h3>{{ skill.label }}</h3>
+              <p>Level: {{ skill.level }}</p>
+              <p>Domains: {{ skill.domains.join(', ') }}</p>
+              <router-link
+                :to="{ name: 'editSkill', params: { id: skill.id } }"
+                class="edit-button"
+              >
+                Edit
+              </router-link>
+              <button class="delete-button" @click="removeSkill(skill.id)">Delete</button>
+            </div>
+          </div>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
 
-export default {
-  name: "CardsComponent",
-  computed: {
-    ...mapGetters(["allSkills"]),
-  },
-  methods: {
-    ...mapActions(["selectSkill", "removeSkill"]),
-  },
-};
+  import { mapActions, mapGetters } from "vuex";
+  import FilterControls from "./filterComponent.vue";
+
+
+  export default {
+    name: "CardsComponent",
+    components: {
+      FilterControls,
+    },
+    data() {
+      return {
+        selectedDomain: "",
+        selectedLevel: "",
+      }
+    },
+    computed: {
+      ...mapGetters(["skillCount", "allSkills", "skillsByDomain", "filteredSkills", "groupedFilteredSkills"]),
+    },
+    methods: {
+      ...mapActions(["addSkill", "removeSkill", "selectSkill", "updateSkill", "cancelEdition"]),
+    },
+  };
 </script>
 
 <style scoped>
@@ -78,15 +133,20 @@ export default {
 
   .edit-button,
   .delete-button {
-    background: none;
+    all: unset; /* Supprime tous les styles par défaut */
+    display: inline-block; /* Réinitialise l'affichage */
+    text-align: center;    /* Centrer le contenu */
+    box-sizing: border-box;
     border: 1px solid #fff;
     border-radius: 5px;
     padding: 5px 10px;
     margin: 5px;
     color: #fff;
+    background: none;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+
 
   .edit-button:hover {
     background-color: #fff;
@@ -96,6 +156,23 @@ export default {
   .delete-button:hover {
     background-color: #fff;
     color: #dc3545;
+  }
+
+  .filter-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .filter-container label {
+    font-weight: bold;
+  }
+
+  .filter-container select {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
   }
 
 </style>
