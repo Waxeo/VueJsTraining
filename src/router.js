@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Cards from './components/cardsComponent.vue'
-import List from './components/listComponent.vue'
-import SkillForm from './components/addAndEditSkillFormComponent.vue'
+import Cards from './pages/Cards.vue'
+import List from './pages/Lists.vue'
+import SkillForm from './components/addAndEditSkillForm.vue'
 
 Vue.use(Router)
 
