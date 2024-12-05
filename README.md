@@ -24,7 +24,6 @@ https://github.com/user-attachments/assets/926af649-74d8-40c9-b725-1aec0ca306eb
 https://github.com/user-attachments/assets/12e1817e-400a-4e44-8ac3-a514dacf89ba
 
 
-
 ### Améliorations possibles pour V2
 
 - [x] Check mapGetters et mapActions pour cleaner l'utilisation du store dans les composants .vue.
@@ -35,6 +34,7 @@ https://github.com/user-attachments/assets/12e1817e-400a-4e44-8ac3-a514dacf89ba
 - [x] Filtrer les skills par level, domains et label... -->> répartition par domains
 - [x] Faire une view de ces skills display sous forme de liste atteignable via l'url /list et une autre display sous forme de cards atteignable via l'url /cards (en gros pour utiliser la data de ton store dans deux view différente, checker vuex-persisted-state)
 - [o] Bulk la suppression
+
 
 ### Améliorations possibles pour V3
 
